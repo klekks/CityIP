@@ -2,7 +2,7 @@ import configparser
 import os
 from random import choice
 from json import loads
-from CsvIO import open_data_reader, open_data_writer, clean_data, add_data
+from CsvIO import open_data_reader, open_data_writer, clean_data
 
 
 def close():  # Функция заверешния работы
@@ -25,6 +25,18 @@ except ImportError:
         except:
             print("Проверьте наличие библиотеки requests и повторите попытку")
             close()
+
+
+def add_data(ans, error_writer):
+    global writer, ip_column, city_column
+    for row in ans:
+        if row["city"] is None:
+            error_writer.writerow({ip_column: row["ip"]})
+            continue
+        if row["city"]["name_ru"] == "":
+            temp = row["country"]["capital_ru"]
+            row['city'] = {"name_ru": temp}
+        writer.writerow({ip_column: row["ip"], city_column: row["city"]["name_ru"]})
 
 
 def get(query, main_url, keys):

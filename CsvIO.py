@@ -51,15 +51,3 @@ def clean_data(reader, processed_output_file, ip_column):
     # возвращаем доступ к очищенной таблице
 
     return open_data_reader(processed_output_file)
-
-
-def add_data(ans, error_writer):
-    global writer, ip_column, city_column
-    for row in ans:
-        if row["city"] is None:
-            error_writer.writerow({ip_column: row["ip"]})
-            continue
-        if row["city"]["name_ru"] == "":
-            temp = row["country"]["capital_ru"]
-            row['city'] = {"name_ru": temp}
-        writer.writerow({ip_column: row["ip"], city_column: row["city"]["name_ru"]})
